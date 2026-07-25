@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pocket C.A. — AI Powered Chartered Accountant</title>
+  <meta name="description" content="Commercial-grade AI Chartered Accountant SaaS for journal entries, GST calculations, income tax planning, and financial analysis."/>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    
+    <!-- SIDEBAR OVERLAY FOR MOBILE -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main Navigation">
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <a href="#" class="brand-link" aria-label="Pocket C.A. Homepage">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">Pocket C.A.</span>
+            <span class="brand-badge">SaaS v2.0</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Action Button -->
+      <div class="sidebar-action">
+        <button class="btn btn-primary btn-new-chat" id="btnNewChat" aria-label="Start New Chat Session (Ctrl+K)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>New Session</span>
+          <kbd class="kbd-shortcut" aria-hidden="true">⌘K</kbd>
+        </button>
+      </div>
+
+      <!-- Search Box for History -->
+      <div class="sidebar-search">
+        <div class="search-input-wrapper">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="historySearch" placeholder="Search conversations…" aria-label="Search chat history"/>
+        </div>
+      </div>
+
+      <!-- Chat History Sessions -->
+      <div class="sidebar-section history-section">
+        <div class="section-label">
+          <span>Recent Sessions</span>
+          <span class="history-count" id="historyCount">0</span>
+        </div>
+        <div class="session-list" id="sessionList" role="listbox" aria-label="Saved Chat Sessions">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Financial Tools & Calculators Quick Launcher -->
+      <div class="sidebar-section tools-section">
+        <div class="section-label">CA Utilities & Calculators</div>
+        <div class="tool-links">
+          <button class="tool-btn" data-tool="gst" aria-label="Open GST Calculator">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"/>
+            </svg>
+            <span>GST Calculator</span>
+          </button>
+          <button class="tool-btn" data-tool="depreciation" aria-label="Open Depreciation Calculator">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+            <span>Depreciation (SLM/WDV)</span>
+          </button>
+          <button class="tool-btn" data-tool="tax" aria-label="Open Income Tax Regime Estimator">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+            </svg>
+            <span>Tax Regime Estimator</span>
+          </button>
+          <button class="tool-btn" data-tool="ratio" aria-label="Open Ratio Analysis Tool">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            <span>Financial Ratios</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Practice Areas Nav -->
+      <nav class="sidebar-section nav-section" aria-label="CA Practice Templates">
+        <div class="section-label">Practice Templates</div>
+        <button class="nav-item" data-prompt="Record a credit purchase entry of ₹50,000 goods from M/s ABC Traders under GST 18%. Show full double-entry table.">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 022 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Journal Entries</span>
+        </button>
+        <button class="nav-item" data-prompt="Explain CGST, SGST, and IGST rules with a ₹1,50,000 inter-state sales invoice.">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l6-6"/><circle cx="9" cy="9" r="1.5"/><circle cx="15" cy="15" r="1.5"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span>GST & Indirect Tax</span>
+        </button>
+        <button class="nav-item" data-prompt="Compare Old vs New Tax Regime for FY 2024-25 for a salaried professional with ₹15 LPA income and ₹2L deductions.">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span>Income Tax & ITR</span>
+        </button>
+        <button class="nav-item" data-prompt="Prepare a Profit & Loss statement for a retail business with Sales ₹25L, COGS ₹14L, Rent ₹1.8L, Admin Expenses ₹80K.">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span>Financial Statements</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="disclaimer-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>Educational CA AI. Consult a licensed practitioner for statutory filings.</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-content" role="main">
+      
+      <!-- TOP NAVBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" id="sidebarToggle" aria-label="Toggle Sidebar" title="Toggle Sidebar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          
+          <div class="topbar-session-info">
+            <h1 class="session-title" id="currentSessionTitle" title="Click to rename session">New Accounting Session</h1>
+            <span class="session-subtitle">Professional Financial Workspace</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Status Indicator -->
+          <div class="status-indicator" id="statusIndicator" title="Gemini 3.6 Flash Active & Ready">
+            <span class="status-dot"></span>
+            <span class="status-text">AI Ready</span>
+          </div>
+
+          <!-- Utility Quick Trigger -->
+          <button class="btn btn-secondary btn-sm" id="btnOpenToolsModal" aria-label="Open CA Utility Calculators">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/>
+            </svg>
+            <span>CA Calculators</span>
+          </button>
+
+          <!-- Clear Chat -->
+          <button class="btn btn-ghost btn-sm" id="btnClearChat" aria-label="Clear current conversation" title="Clear conversation">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+            </svg>
+            <span>Clear</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- CHAT THREAD WORKSPACE -->
+      <div class="chat-thread" id="chatThread" tabIndex="0" role="region" aria-label="Chat Conversation Thread">
+        
+        <!-- HERO LANDING / WELCOME SCREEN -->
+        <div class="hero-screen" id="welcomeScreen">
+          <div class="hero-container">
+            <div class="hero-emblem" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            
+            <div class="hero-badge">Pocket C.A. Enterprise AI</div>
+            <h1 class="hero-headline">AI Chartered Accountant</h1>
+            <p class="hero-subtext">
+              Real-time Indian accounting, GST compliance, income tax planning, and double-entry financial analysis powered by streaming Gemini intelligence.
+            </p>
+
+            <!-- Metrics Strip -->
+            <div class="hero-metrics">
+              <div class="metric-item">
+                <span class="metric-val">100%</span>
+                <span class="metric-lbl">Double-Entry Standard</span>
+              </div>
+              <div class="metric-divider"></div>
+              <div class="metric-item">
+                <span class="metric-val">FY 2024-25</span>
+                <span class="metric-lbl">Tax Slabs Updated</span>
+              </div>
+              <div class="metric-divider"></div>
+              <div class="metric-item">
+                <span class="metric-val">&lt; 150ms</span>
+                <span class="metric-lbl">SSE Token Latency</span>
+              </div>
+            </div>
+
+            <!-- Dynamic Starter Cards Grid -->
+            <div class="starters-wrapper">
+              <div class="starters-header">
+                <h2>Suggested Accounting Scenarios</h2>
+                <button class="btn-refresh-starters" id="btnRefreshStarters" title="Refresh starter suggestions">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+                  </svg>
+                  Shuffle
+                </button>
+              </div>
+              <div class="starter-grid" id="starterGrid">
+                <!-- Dynamically populated JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MESSAGES CONTAINER -->
+        <div class="messages-container" id="messagesContainer" role="log" aria-live="polite"></div>
+      </div>
+
+      <!-- COMPOSER BAR -->
+      <div class="composer-container">
+        <!-- Floating Stop Generating Control -->
+        <div class="stop-generating-wrapper hidden" id="stopGeneratingWrapper">
+          <button class="btn btn-secondary btn-stop" id="btnStopGenerating">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="6" width="12" height="12" rx="1"/>
+            </svg>
+            <span>Stop Generating</span>
+          </button>
+        </div>
+
+        <div class="composer-card">
+          <div class="composer-input-row">
+            <textarea 
+              class="composer-textarea" 
+              id="chatInput" 
+              rows="1" 
+              maxlength="4000" 
+              placeholder="Ask about journal entries, GST rates, income tax planning, financial statement analysis…" 
+              aria-label="Chat input message"
+              autofocus></textarea>
+            
+            <div class="composer-actions">
+              <span class="char-count" id="charCounter" aria-label="Character limit">0/4000</span>
+              <button class="btn-send" id="sendBtn" disabled aria-label="Send message">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="composer-footer">
+          <span><kbd>Enter</kbd> to send &nbsp;·&nbsp; <kbd>Shift+Enter</kbd> for line break &nbsp;·&nbsp; <kbd>Ctrl+K</kbd> for new chat</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CA UTILITY CALCULATORS MODAL -->
+  <div class="modal-backdrop hidden" id="toolsModal" role="dialog" aria-modal="true" aria-labelledby="toolsModalTitle">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/>
+          </svg>
+          <h2 id="toolsModalTitle">CA Utility Calculators</h2>
+        </div>
+        <button class="btn-close-modal" id="btnCloseToolsModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <!-- Modal Tabs -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="gstTab">GST Calculator</button>
+        <button class="tab-btn" data-tab="deprTab">Depreciation (SLM/WDV)</button>
+        <button class="tab-btn" data-tab="taxTab">Tax Regime Estimator</button>
+        <button class="tab-btn" data-tab="ratioTab">Ratio Analysis</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- GST Tab Content -->
+        <div class="tab-pane active" id="gstTab">
+          <div class="calc-grid">
+            <div class="calc-inputs">
+              <div class="form-group">
+                <label for="gstAmount">Amount (₹)</label>
+                <input type="number" id="gstAmount" value="100000" placeholder="e.g. 100000"/>
+              </div>
+              <div class="form-group">
+                <label for="gstRate">GST Rate (%)</label>
+                <select id="gstRate">
+                  <option value="5">5% (Essential items)</option>
+                  <option value="12">12% (Standard goods/services)</option>
+                  <option value="18" selected>18% (Standard commercial)</option>
+                  <option value="28">28% (Luxury / Deferment)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="gstType">Supply Type</label>
+                <select id="gstType">
+                  <option value="intra">Intra-State (CGST + SGST)</option>
+                  <option value="inter">Inter-State (IGST)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="gstCalculationType">Calculation Mode</label>
+                <select id="gstCalculationType">
+                  <option value="exclusive">Exclusive of GST (Add GST)</option>
+                  <option value="inclusive">Inclusive of GST (Extract GST)</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="calc-results" id="gstResultBox">
+              <h3>Calculation Breakdown</h3>
+              <div class="res-row"><span>Base Amount:</span><strong id="gstBaseRes">₹1,00,000</strong></div>
+              <div class="res-row" id="cgstRow"><span>CGST:</span><strong id="cgstRes">₹9,000</strong></div>
+              <div class="res-row" id="sgstRow"><span>SGST:</span><strong id="sgstRes">₹9,000</strong></div>
+              <div class="res-row hidden" id="igstRow"><span>IGST:</span><strong id="igstRes">₹0</strong></div>
+              <div class="res-row total-row"><span>Total Invoice Amount:</span><strong id="gstTotalRes">₹1,18,000</strong></div>
+              
+              <button class="btn btn-secondary btn-block mt-3" id="btnAskAiGst">
+                ✨ Ask Pocket C.A. to journalize this invoice
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Depreciation Tab -->
+        <div class="tab-pane" id="deprTab">
+          <div class="calc-grid">
+            <div class="calc-inputs">
+              <div class="form-group">
+                <label for="assetCost">Asset Purchase Cost (₹)</label>
+                <input type="number" id="assetCost" value="500000" placeholder="e.g. 500000"/>
+              </div>
+              <div class="form-group">
+                <label for="salvageValue">Estimated Salvage Value (₹)</label>
+                <input type="number" id="salvageValue" value="50000" placeholder="e.g. 50000"/>
+              </div>
+              <div class="form-group">
+                <label for="deprRate">Rate of Depreciation (%)</label>
+                <input type="number" id="deprRate" value="10" placeholder="e.g. 10"/>
+              </div>
+              <div class="form-group">
+                <label for="usefulLife">Useful Life (Years)</label>
+                <input type="number" id="usefulLife" value="5" placeholder="e.g. 5"/>
+              </div>
+            </div>
+            
+            <div class="calc-results">
+              <h3>Depreciation Schedule Preview</h3>
+              <table class="schedule-table" id="deprScheduleTable">
+                <thead>
+                  <tr><th>Year</th><th>Opening WDV</th><th>Depreciation</th><th>Closing WDV</th></tr>
+                </thead>
+                <tbody id="deprTableBody">
+                  <!-- Populated JS -->
+                </tbody>
+              </table>
+              <button class="btn btn-secondary btn-block mt-3" id="btnAskAiDepr">
+                ✨ Ask Pocket C.A. for Depreciation Journal Entries
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Estimator Tab -->
+        <div class="tab-pane" id="taxTab">
+          <div class="calc-grid">
+            <div class="calc-inputs">
+              <div class="form-group">
+                <label for="grossSalary">Gross Annual Income (₹)</label>
+                <input type="number" id="grossSalary" value="1500000"/>
+              </div>
+              <div class="form-group">
+                <label for="ded80C">Section 80C Deductions (₹)</label>
+                <input type="number" id="ded80C" value="150000"/>
+              </div>
+              <div class="form-group">
+                <label for="ded80D">Health Insurance 80D (₹)</label>
+                <input type="number" id="ded80D" value="25000"/>
+              </div>
+              <div class="form-group">
+                <label for="hraExemption">HRA Exemption (₹)</label>
+                <input type="number" id="hraExemption" value="120000"/>
+              </div>
+            </div>
+
+            <div class="calc-results">
+              <h3>Regime Comparison</h3>
+              <div class="regime-compare-cards">
+                <div class="regime-card">
+                  <h4>Old Tax Regime</h4>
+                  <p class="tax-amt" id="oldTaxRes">₹1,87,200</p>
+                  <span class="regime-sub">With 80C, 80D, HRA deductions</span>
+                </div>
+                <div class="regime-card recommended">
+                  <div class="rec-badge">Recommended</div>
+                  <h4>New Tax Regime</h4>
+                  <p class="tax-amt" id="newTaxRes">₹1,45,600</p>
+                  <span class="regime-sub">Standard ₹75K deduction applied</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-3" id="btnAskAiTax">
+                ✨ Ask Pocket C.A. for detailed Tax Planning Advice
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Ratios Tab -->
+        <div class="tab-pane" id="ratioTab">
+          <div class="calc-grid">
+            <div class="calc-inputs">
+              <div class="form-group">
+                <label for="currentAssets">Current Assets (₹)</label>
+                <input type="number" id="currentAssets" value="400000"/>
+              </div>
+              <div class="form-group">
+                <label for="currentLiabilities">Current Liabilities (₹)</label>
+                <input type="number" id="currentLiabilities" value="200000"/>
+              </div>
+              <div class="form-group">
+                <label for="totalDebt">Total Debt (₹)</label>
+                <input type="number" id="totalDebt" value="300000"/>
+              </div>
+              <div class="form-group">
+                <label for="totalEquity">Total Shareholder Equity (₹)</label>
+                <input type="number" id="totalEquity" value="600000"/>
+              </div>
+            </div>
+
+            <div class="calc-results">
+              <h3>Ratio Summary</h3>
+              <div class="res-row"><span>Current Ratio:</span><strong id="currRatioRes">2.00 : 1 (Ideal)</strong></div>
+              <div class="res-row"><span>Debt-to-Equity:</span><strong id="debtEquityRes">0.50 : 1 (Low Risk)</strong></div>
+              <button class="btn btn-secondary btn-block mt-3" id="btnAskAiRatio">
+                ✨ Ask Pocket C.A. to interpret these Ratios
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION CLEAR MODAL -->
+  <div class="modal-backdrop hidden" id="clearModal" role="dialog" aria-modal="true" aria-labelledby="clearModalTitle">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 id="clearModalTitle">Clear Conversation</h3>
+        <button class="btn-close-modal" id="btnCloseClearModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to clear the active conversation session? Memory history for this turn will be reset.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCancelClear">Cancel</button>
+        <button class="btn btn-danger" id="btnConfirmClear">Clear Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RENAME SESSION MODAL -->
+  <div class="modal-backdrop hidden" id="renameModal" role="dialog" aria-modal="true">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3>Rename Conversation</h3>
+        <button class="btn-close-modal" id="btnCloseRenameModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="renameInput">Session Title</label>
+          <input type="text" id="renameInput" placeholder="Enter session name…"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCancelRename">Cancel</button>
+        <button class="btn btn-primary" id="btnSaveRename">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+  <!-- Application Main JS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
