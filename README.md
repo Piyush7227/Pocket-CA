@@ -40,17 +40,22 @@ Pocket C.A. is an intelligent AI financial assistant designed to help users with
    ```
 
 3. **Configure environment variables**:
+
    Create a `.env` file in the root directory:
+
    ```env
    GEMINI_API_KEY=your_gemini_api_key_here
    SECRET_KEY=your_secret_key
    ```
+
    *(Get your free key from [Google AI Studio](https://aistudio.google.com/apikey))*
 
 4. **Run the application**:
+
    ```bash
    python app.py
    ```
+
    Open `http://127.0.0.1:5000` in your browser.
 
 ---
@@ -64,6 +69,15 @@ This project includes a `Procfile` and `render.yaml` pre-configured for **Render
 3. Connect repository `Piyush7227/Pocket-CA`.
 4. Set Environment Variable `GEMINI_API_KEY` = `your_api_key`.
 5. Deploy!
+
+---
+
+## 👥 Group Members
+
+| Member | Name | Registration Number |
+|:------:|------|:-------------------:|
+| 1 | **Piyush Kumar Singh** | **12401851** |
+| 2 | **Aditya Aranedath** | **12406143** |
 
 ---
 
